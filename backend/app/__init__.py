@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from decouple import config
+from sqlalchemy import text
 import re
 
 db = SQLAlchemy()
@@ -28,14 +29,19 @@ def create_app():
     
     # Create schema if it doesn't exist
     with app.app_context():
-        # Create schema if it doesn't exist
-        db.session.execute('CREATE SCHEMA IF NOT EXISTS portfolio')
-        db.session.commit()
-        
-        # Import models and create tables
-        from app.models.models import Project, Message, Skill, User
-        db.create_all()
-        db.session.commit()
+        try:
+            # Create schema if it doesn't exist
+            db.session.execute(text('CREATE SCHEMA IF NOT EXISTS portfolio'))
+            db.session.commit()
+            
+            # Import models and create tables
+            from app.models.models import Project, Message, Skill, User
+            db.create_all()
+            db.session.commit()
+        except Exception as e:
+            print(f"Database initialization error: {e}")
+            db.session.rollback()
+            raise
     
     # Register blueprints
     from app.routes.projects import bp as projects_bp
