@@ -10,8 +10,14 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
     
-    # Configure CORS
-    CORS(app)
+    # Configure CORS to allow requests from frontend
+    CORS(app, resources={
+        r"/api/*": {
+            "origins": ["http://localhost:3000", "https://portfolio-frontend.onrender.com"],
+            "methods": ["GET", "POST", "PUT", "DELETE"],
+            "allow_headers": ["Content-Type"]
+        }
+    })
     
     # Database configuration
     database_url = config('DATABASE_URL', default='postgresql:///portfolio')
@@ -39,7 +45,7 @@ def create_app():
             db.create_all()
             db.session.commit()
         except Exception as e:
-            print(f"Database initialization error: {e}")
+            print(f"Database initialization error: {str(e)}")
             db.session.rollback()
             raise
     
