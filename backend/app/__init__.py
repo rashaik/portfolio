@@ -12,12 +12,16 @@ def create_app():
     
     # Configure CORS to allow requests from frontend
     CORS(app, resources={
-        r"/api/*": {
-            "origins": ["http://localhost:3000", "https://portfolio-frontend.onrender.com"],
-            "methods": ["GET", "POST", "PUT", "DELETE"],
-            "allow_headers": ["Content-Type"]
-        }
-    })
+    r"/api/*": {
+        "origins": [
+            "http://localhost:3000", 
+            "https://portfolio-frontend.onrender.com",
+            "https://portfolio-frontend-pbq2.onrender.com"  # Add your actual frontend domain
+        ],
+        "methods": ["GET", "POST", "PUT", "DELETE"],
+        "allow_headers": ["Content-Type"]
+    }
+})
     
     # Database configuration
     database_url = config('DATABASE_URL', default='postgresql:///portfolio')
@@ -51,11 +55,11 @@ def create_app():
     
     # Register blueprints
     from app.routes.projects import bp as projects_bp
-    from app.routes.skills import bp as skills_bp
-    from app.routes.auth import bp as auth_bp
-    
     app.register_blueprint(projects_bp)
-    app.register_blueprint(skills_bp)
-    app.register_blueprint(auth_bp)
+
+    # Add a test route to verify API is working
+    @app.route('/api/test', methods=['GET'])
+    def test_api():
+        return {'message': 'API is working!'}, 200
     
     return app
