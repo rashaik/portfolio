@@ -3,7 +3,7 @@ services:
     name: portfolio-backend
     env: python
     buildCommand: cd backend && pip install -r requirements.txt
-    startCommand: cd backend && gunicorn --bind 0.0.0.0:$PORT 'run:app'
+    startCommand: cd backend && gunicorn --chdir backend 'run:app' --bind 0.0.0.0:$PORT --workers 4 --timeout 120
     envVars:
       - key: DATABASE_URL
         fromDatabase:
