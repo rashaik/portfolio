@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from decouple import config
+import re
 
 db = SQLAlchemy()
 
@@ -12,13 +13,29 @@ def create_app():
     CORS(app)
     
     # Database configuration
-    app.config['SQLALCHEMY_DATABASE_URI'] = config('DATABASE_URL', 
-        default='postgresql:///portfolio')
+    database_url = config('DATABASE_URL', default='postgresql:///portfolio')
+    
+    # Fix Render Postgres URL format if needed
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql://", 1)
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = config('SECRET_KEY', default='your-secret-key')
     
     # Initialize extensions
     db.init_app(app)
+    
+    # Create schema if it doesn't exist
+    with app.app_context():
+        # Create schema if it doesn't exist
+        db.session.execute('CREATE SCHEMA IF NOT EXISTS portfolio')
+        db.session.commit()
+        
+        # Import models and create tables
+        from app.models.models import Project, Message, Skill, User
+        db.create_all()
+        db.session.commit()
     
     # Register blueprints
     from app.routes.projects import bp as projects_bp
