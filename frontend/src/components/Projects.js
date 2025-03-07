@@ -10,16 +10,20 @@ import './Projects.css';
 function Projects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [loadedImages, setLoadedImages] = useState({});
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
+        console.log('Fetching from:', `${API_BASE_URL}/projects`); // Debug log
         const response = await axios.get(`${API_BASE_URL}/projects`);
+        console.log('API Response:', response.data); // Debug log
         setProjects(response.data);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching projects:', error);
+        setError(error.message);
         setLoading(false);
       }
     };
@@ -38,6 +42,15 @@ function Projects() {
     return (
       <Container className="text-center mt-5">
         <h2>Loading projects...</h2>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container className="text-center mt-5">
+        <h2>Error loading projects</h2>
+        <p className="text-danger">{error}</p>
       </Container>
     );
   }
@@ -99,7 +112,7 @@ function Projects() {
           ))
         ) : (
           <Col xs={12} className="text-center">
-            <p>No projects found.</p>
+            <p>No projects found. Please check back later!</p>
           </Col>
         )}
       </Row>

@@ -2,9 +2,10 @@ from flask import Blueprint, jsonify, request, current_app
 from app.models.models import Project
 from app import db
 
-bp = Blueprint('projects', __name__, url_prefix='/api/projects')
+# Change the URL prefix to match the frontend expectation
+bp = Blueprint('projects', __name__, url_prefix='/api')
 
-@bp.route('/', methods=['GET'])
+@bp.route('/projects', methods=['GET'])
 def get_projects():
     try:
         projects = Project.query.all()
@@ -25,7 +26,7 @@ def get_projects():
         print(f"Error in get_projects: {str(e)}")  # Debug print
         return jsonify({'error': str(e)}), 500
 
-@bp.route('/<int:id>', methods=['GET'])
+@bp.route('/projects/<int:id>', methods=['GET'])
 def get_project(id):
     project = Project.query.get_or_404(id)
     return jsonify({
@@ -39,7 +40,7 @@ def get_project(id):
         'created_at': project.created_at.isoformat()
     })
 
-@bp.route('/', methods=['POST'])
+@bp.route('/projects', methods=['POST'])
 def create_project():
     data = request.get_json()
     project = Project(
