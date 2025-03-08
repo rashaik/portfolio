@@ -8,14 +8,21 @@ bp = Blueprint('skills', __name__)
 
 @bp.route('/api/skills', methods=['GET'])
 def get_skills():
-    skills = Skill.query.all()
-    return jsonify([{
-        'id': s.id,
-        'name': s.name,
-        'category': s.category,
-        'proficiency': s.proficiency
-    } for s in skills])
-
+    try:
+        skills = Skill.query.all()
+        print(f"Found {len(skills)} skills")
+        skills_list = [{
+            'id': s.id,
+            'name': s.name,
+            'category': s.category,
+            'proficiency': s.proficiency
+        } for s in skills]
+        print("Skills list:", skills_list)  # Debug print
+        return jsonify(skills_list)
+    except Exception as e:
+        print(f"Error in get_skills: {str(e)}")  # Debug print
+        return jsonify({'error': str(e)}), 500
+    
 @bp.route('/', methods=['POST'])
 def create_skill():
     data = request.get_json()
