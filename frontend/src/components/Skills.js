@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, ProgressBar } from 'react-bootstrap';
 import axios from 'axios';
+import API_BASE_URL from '../config';
+// import './Skills.css';
 
 function Skills() {
   const [skills, setSkills] = useState([]);
