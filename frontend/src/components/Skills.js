@@ -9,7 +9,9 @@ function Skills() {
   useEffect(() => {
     const fetchSkills = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/skills');
+        console.log('Fetching from:', `${API_BASE_URL}/skills`); // Debug log
+        const response = await axios.get(`${API_BASE_URL}/skills`);
+        console.log('API Response:', response.data); // Debug log
         const groupedSkills = response.data.reduce((acc, skill) => {
           if (!acc[skill.category]) {
             acc[skill.category] = [];
