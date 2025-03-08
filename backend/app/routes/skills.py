@@ -22,8 +22,18 @@ def get_skills():
     except Exception as e:
         print(f"Error in get_skills: {str(e)}")  # Debug print
         return jsonify({'error': str(e)}), 500
-    
-@bp.route('/', methods=['POST'])
+
+@bp.route('/api/skills/<int:id>', methods=['GET'])
+def get_project(id):
+    skill = Skill.query.get_or_404(id)
+    return jsonify({
+        'id': skill.id,
+        'name': skill.name,
+        'category': skill.category,
+        'proficiency': skill.proficiency
+    })
+
+@bp.route('/api/skills', methods=['POST'])
 def create_skill():
     data = request.get_json()
     skill = Skill(
