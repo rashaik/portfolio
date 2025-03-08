@@ -21,7 +21,7 @@ services:
     staticPublishPath: frontend/build
     envVars:
       - key: REACT_APP_API_URL
-        value: https://portfolio-backend.onrender.com/api
+        value: https://portfolio-backend-mrpp.onrender.com/api
 
 jobs:
   - name: seed-database
