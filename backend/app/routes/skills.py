@@ -1,10 +1,12 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 from app.models.models import Skill
 from app import db
+from datetime import datetime
 
-bp = Blueprint('skills', __name__, url_prefix='/api/skills')
+# Change the URL prefix to match the frontend expectation
+bp = Blueprint('skills', __name__)
 
-@bp.route('/', methods=['GET'])
+@bp.route('/api/skills', methods=['GET'])
 def get_skills():
     skills = Skill.query.all()
     return jsonify([{
