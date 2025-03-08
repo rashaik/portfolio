@@ -57,6 +57,9 @@ def create_app():
     from app.routes.projects import bp as projects_bp
     app.register_blueprint(projects_bp)
 
+    from app.routes.skills import bp as skills_bp
+    app.register_blueprint(skills_bp)
+ 
     # Add a test route to verify API is working
     @app.route('/api/test', methods=['GET'])
     def test_api():
