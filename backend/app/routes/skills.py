@@ -24,7 +24,7 @@ def get_skills():
         return jsonify({'error': str(e)}), 500
 
 @bp.route('/api/skills/<int:id>', methods=['GET'])
-def get_project(id):
+def get_skill(id):
     skill = Skill.query.get_or_404(id)
     return jsonify({
         'id': skill.id,
